@@ -3,6 +3,7 @@ from flask_login import current_user, login_user, login_required
 from my_app.auth.models import Users, MainLoginForm
 from my_app import login_manager
 from my_app import auth
+import os
 
 sections = Blueprint('sections', __name__)
 
@@ -47,14 +48,14 @@ def show_Cloud():
 @sections.route('/show_Games')
 @login_required
 def show_Games():
-    resp = make_response(render_template('games.html'))
+    resp = make_response(render_template('games.html', section_image=os.path.join('sections', 'Games-Wii.jpg')))
     resp.headers.add('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0')
     return resp
 
 @sections.route('/show_Courses')
 @login_required
 def show_Courses():
-    resp = make_response(render_template('courses.html'))
+    resp = make_response(render_template('courses.html', section_image=os.path.join('sections', 'Courses-Cover.jpg')))
     resp.headers.add('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0')
     return resp
 

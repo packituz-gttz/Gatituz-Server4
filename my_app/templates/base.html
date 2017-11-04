@@ -33,7 +33,7 @@
                 {% endblock %}
                 {% block item_settings %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('sections.show_categories') }}"><i class="fa d-inline fa-lg fa-cog"></i> Settings</a>
+                    <a class="nav-link" href="{{ url_for('settings.main_panel') }}"><i class="fa d-inline fa-lg fa-cog"></i> Settings</a>
                 </li>
                 {% endblock %}
             </ul>
@@ -47,11 +47,18 @@
 {% endblock %}
 {% block mainbody %}
     {% block headerimage %}
-        <div class="py-5 text-center opaque-overlay"
-             style="background-image: url(&quot;https://pingendo.github.io/templates/sections/assets/cover_event.jpg&quot;);">
+        <div class="py-5 text-center opaque-overlay p-0 container-fluid"
+             style="background-image: url({{ url_for('static', filename= section_image) }})">
             <div class="container py-5">
                 <div class="row">
-                    pika pi
+
+
+                </div>
+            </div>
+            <div class="container py-5">
+                <div class="row">
+
+
                 </div>
             </div>
             <br>
