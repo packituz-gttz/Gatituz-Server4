@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block item_sections %}
+    <li class="nav-item">
+        <a class="nav-link active" href="{{ url_for('sections.show_categories') }}"><i class="fa d-inline fa-lg fa-th-large"></i> Sections</a>
+    </li>
+{% endblock %}
+
+{% block mainbody %}
+    <div class="bg-light text-dark py-5">
+    <div class="container">
+      <div class="row">
+          {% for section in sections %}
+              <div class="col-md-3 my-3">
+              <div class="card">
+                <div class="card-header bg-primary text-white text-center">{{ section[0] }}</div>
+                <img class="img-fluid" src="{{ url_for('static', filename='sections/' + section[0] + '.jpg') }}" alt="{{ section }}">
+                <div class="card-body">
+                  <h6 class="card-subtitle text-muted">{{ section[0] }}</h6>
+                  <p class="card-text p-y-1">{{ section[1] }}</p>
+                  <a href="{{ url_for("sections." + 'show_' + section[0]) }}" class="card-link">Go!</a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

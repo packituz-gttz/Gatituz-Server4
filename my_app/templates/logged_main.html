@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block navbar %}
+    {{ super() }}
+{% endblock %}
+
+{% block mainbody %}
+    <div class="py-5 text-center bg-primary">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>Welcome</h1>
+                    <p class="lead">&nbsp;</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 p-4">
+                    <img class="img-fluid d-block mx-auto rounded-circle"
+                         src="/home/packituz/Downloads/twitter_icon_07.png">
+                    <p class="my-4"><i>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget
+                        dolor. Aenean massa.</i></p>
+                    <p><b>Meow</b>
+                        <br>Senior developer</p>
+                </div>
+                <div class="col-md-6 p-4">
+                    <p class="my-4"><i>Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Cum sociis
+                        natoque penatibus et magnis dis parturient montes.</i></p>
+                    <p><b>Carlito</b>
+                        <br>Boss</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="py-5">
+        <div class="row">
+            <div class="col-md-6">
+                <h4 class="text-primary"><i class="d-block  fa fa-newspaper-o"> News</i></h4>
+                <div class="blockquote text-primary">
+                    <p>Blockquoute</p>
+                    <div class="blockquote-footer">Someone famous</div>
+                </div>
+            </div>
+            <div class="col-md-6"></div>
+        </div>
+    </div>
+    <div class="py-5">
+        <h4 class="text-primary"><i class="d-block  fa fa-book"> Books</i></h4>
+    </div>
+{% endblock %}

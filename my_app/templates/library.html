@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block item_sections %}
+    <li class="nav-item">
+        <a class="nav-link active" href="{{ url_for('sections.show_categories') }}"><i class="fa d-inline fa-lg fa-th-large"></i> Sections</a>
+    </li>
+{% endblock %}
+
+{% block mainbody %}
+    {% block headerimage %}
+        {{ super() }}
+    {% endblock %}
+    {% block categoriesmenu %}
+        {{ super() }}
+    {% endblock %}
+    {% block searchbar %}
+        {{ super() }}
+    {% endblock %}
+    {% block itemlist %}
+        {{ super() }}
+    {% endblock %}
+{% endblock %}
