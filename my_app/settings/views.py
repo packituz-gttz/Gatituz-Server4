@@ -1,8 +1,10 @@
-from flask import render_template, request, redirect, url_for, Blueprint, g, session, make_response
+from flask import render_template, request, redirect, url_for, Blueprint, g, session, make_response, \
+    flash
 from flask_login import current_user, login_user, login_required
-from my_app.auth.models import Users, MainLoginForm
+from my_app.auth.models import Users
 from my_app import login_manager
 from my_app import auth
+from my_app.settings.models import NewUserForm
 import os
 
 settings = Blueprint('settings', __name__)
@@ -24,11 +26,21 @@ def main_panel():
 def admin_panel(admin_tab='users'):
     if session['usr_type'] == 'Admin':
         users = Users.query.all()
+        form = NewUserForm()
         resp = make_response(render_template('admin_settings.html',
                                              titles=['Name', 'Type', 'Disk Quota(GB)', 'Delete', 'Password'],
-                                             rows=users))
+                                             rows=users, new=form))
         resp.headers.add('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0')
         return resp
     else:
         return redirect('settings.main_panel')
+
+@settings.route('/new_user', methods=['GET', 'POST'])
+@login_required
+def new_user():
+    if session['usr_type'] == 'Admin':
+        form = NewUserForm(request.form)
+        flash('Successfully added', 'success')
+        return redirect(url_for('settings.admin_panel'))
+    return redirect('settings.main_panel')
 

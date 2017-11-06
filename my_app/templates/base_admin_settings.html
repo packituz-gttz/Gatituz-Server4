@@ -79,7 +79,22 @@
     {% block admintable %}
         <div class="py-5">
             <div class="container">
+            {% with messages = get_flashed_messages(category_filter=["error"]) %}
+                  {% if messages %}
+                      {% for message in messages %}
+                        <div class="alert alert-danger alert-dismissable">{{ message }}</div>
+                      {% endfor %}
+                  {% endif %}
+              {% endwith %}
+              {% with messages = get_flashed_messages(category_filter=["success"]) %}
+                  {% if messages %}
+                      {% for message in messages %}
+                        <div class="alert alert-success alert-dismissable">{{ message }}</div>
+                      {% endfor %}
+                  {% endif %}
+              {% endwith %}
               <div class="row">
+
                 <div class="col-md-12">
                   <table class="table">
                     <thead>
@@ -100,26 +115,26 @@
                               </a>
                             </td>
                               <td><input type="password" name="email" class="form-control form-control-sm col-3"></td>
-                              <td class="align-content-end">
+                              <td>
                                   <a href=""><i class="fa fa-lg fa-check"></i></a>
                               </td>
                           </tr>
                       {% endfor %}
-                      <tr>
-                        <td>1</td>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>Larry</td>
-                        <td>the Bird</td>
-                      </tr>
+
+                      {% block newelement %}
+                          <form action="{{ url_for('settings.new_user') }}" method="post" enctype="multipart/form-data">
+                            {{ new.csrf_token }}
+                            <tr>
+                                <td>{{ new.usr_name(class="form-control form-control-sm col-3", required='') }}</td>
+                                <td>{{ new.usr_type(class="btn btn-outline-primary dropdown-toggle", required='') }}</td>
+                                <td>{{ new.disk_quota(class="form-control form-control-sm col-3", required='') }}</td>
+                                <td></td>
+                                <td>{{ new.password(class="form-control form-control-sm col-3", required='') }}</td>
+                                <td>{{ new.submit }}</td>
+                            </tr>
+                          </form>
+                      {% endblock %}
+
                     </tbody>
                   </table>
                 </div>
