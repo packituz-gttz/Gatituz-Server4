@@ -4,7 +4,7 @@ from flask_login import current_user, login_user, login_required
 from my_app.auth.models import Users
 from my_app import login_manager
 from my_app import auth
-from my_app.settings.models import NewUserForm
+from my_app.settings.models import NewUserForm, UpdateProfile
 import os
 
 settings = Blueprint('settings', __name__)
@@ -35,6 +35,7 @@ def admin_panel(admin_tab='users'):
     else:
         return redirect('settings.main_panel')
 
+# TODO add user to db
 @settings.route('/new_user', methods=['GET', 'POST'])
 @login_required
 def new_user():
@@ -44,3 +45,14 @@ def new_user():
         return redirect(url_for('settings.admin_panel'))
     return redirect('settings.main_panel')
 
+@settings.route('/change_profile')
+@login_required
+def change_profile():
+    form = UpdateProfile()
+    try:
+        print (current_user.get_id())
+        user = Users.query.filter_by(usr_name=current_user.get_id()).first()
+        print (user.usr_name)
+    except TimeoutError:
+        pass
+    return render_template('user_profile.html', new=form)

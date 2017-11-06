@@ -16,3 +16,9 @@ class NewUserForm(FlaskForm):
     disk_quota = DecimalField('', validators=[InputRequired()])
     password = PasswordField('', validators=[InputRequired()])
     submit = SubmitField('Add')
+
+class UpdateProfile(FlaskForm):
+    picture = FileField("Profile Picture", validators=[Optional(), FileRequired()])
+    description = TextAreaField("Your Biography", validators=[Optional(), Length(max=500)])
+    profession = StringField("Your Profession", validators=[Optional(), Length(max=50)])
+    submit = SubmitField("OK")

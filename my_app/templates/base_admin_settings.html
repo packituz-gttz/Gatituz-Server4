@@ -53,22 +53,33 @@
       <div class="row">
         <div class="col-md-12">
           <ul class="nav nav-pills">
-            <li class="nav-item">
-              <a href="#" class="nav-link">Books</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Media</a>
-            </li>
-            <li class="nav-item">
-              <a href="{{ url_for('settings.admin_panel') }}" class="active nav-link">Users</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Courses
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">My Profile</a>
-            </li>
+              {% block barbooks %}
+                  <li class="nav-item">
+                      <a href="#" class="nav-link">Books</a>
+                  </li>
+              {% endblock %}
+              {% block barmedia %}
+                  <li class="nav-item">
+                      <a class="nav-link" href="#">Media</a>
+                  </li>
+              {% endblock %}
+              {% block barusers %}
+                  <li class="nav-item">
+                      <a href="{{ url_for('settings.admin_panel') }}" class="nav-link">Users</a>
+                  </li>
+              {% endblock %}
+              {% block barcourses %}
+                  <li class="nav-item">
+                      <a class="nav-link" href="#">Courses
+                      </a>
+                  </li>
+              {% endblock %}
+              {% block barprofile %}
+                  <li class="nav-item">
+                      <a class="nav-link" href="{{ url_for('settings.change_profile') }}">My Profile</a>
+                  </li>
+              {% endblock %}
+
           </ul>
         </div>
       </div>

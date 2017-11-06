@@ -6,3 +6,9 @@
             Settings</a>
     </li>
 {% endblock %}
+
+{% block barusers %}
+    <li class="nav-item">
+        <a href="{{ url_for('settings.admin_panel') }}" class="active nav-link">Users</a>
+    </li>
+{% endblock %}
