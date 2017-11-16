@@ -2,10 +2,13 @@ from flask import render_template, request, redirect, url_for, Blueprint, g, ses
     flash
 from flask_login import current_user, login_user, login_required
 from my_app.auth.models import Users
+from werkzeug.utils import secure_filename
 from my_app import login_manager
-from my_app import auth
+from my_app import auth, db
 from my_app.settings.models import NewUserForm, UpdateProfile
 import os
+
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 
 settings = Blueprint('settings', __name__)
 
@@ -43,7 +46,7 @@ def new_user():
         form = NewUserForm(request.form)
         flash('Successfully added', 'success')
         return redirect(url_for('settings.admin_panel'))
-    return redirect('settings.main_panel')
+    return redirect(url_for('settings.main_panel'))
 
 @settings.route('/change_profile')
 @login_required
@@ -53,6 +56,44 @@ def change_profile():
         print (current_user.get_id())
         user = Users.query.filter_by(usr_name=current_user.get_id()).first()
         print (user.usr_name)
+        form.description.data = user.bio
+        form.profession.data = user.profession
+        form.email.data = user.email
     except TimeoutError:
         pass
     return render_template('user_profile.html', new=form)
+
+@settings.route('/validate_change_profile', methods=['GET', 'POST'])
+@login_required
+def validate_change_profile():
+    band = False
+    form = UpdateProfile(request.form)
+    if form.validate_on_submit():
+        pic_file = request.files['picture']
+        try:
+            user = Users.query.filter_by(usr_name=current_user.get_id()).first()
+            if pic_file.filename:
+                pic_filename = secure_filename(pic_file.filename)
+                if pic_filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS:
+                    pic_file.save(os.path.join('my_app', 'static', 'Users_Pics',
+                                               current_user.get_id() + "." + pic_filename.rsplit(".", 1)[1]))
+                    user.profile_pic = os.path.join('static', 'Users_Pics',
+                                                    current_user.get_id() + "." + pic_filename.rsplit(".", 1)[1])
+                    band = True
+            if form.profession.data:
+                band = True
+                user.profession = form.profession.data
+            if form.description.data:
+                band = True
+                user.bio = form.description.data
+            if form.email.data:
+                band = True
+                user.email = form.email.data
+            if band:
+                db.session.commit()
+                flash('Succesfully Changed', 'success')
+            print (form.profession.data)
+            print (form.description.data)
+        except (TimeoutError) as err:
+            flash('Error, please try later', 'error')
+    return redirect(url_for('settings.change_profile'))

@@ -12,8 +12,11 @@
         <a class="active nav-link" href="{{ url_for('settings.change_profile') }}">My Profile</a>
     </li>
 {% endblock %}
+{% block messagesview %}
+    {{ super() }}
+{% endblock %}
 {% block newelement %}
-    <form action="{{ url_for('settings.new_user') }}" method="post" enctype="multipart/form-data">
+    <form action="{{ url_for('settings.validate_change_profile') }}" method="post" enctype="multipart/form-data">
         {{ new.csrf_token }}
         <div class="form-group">
             {{ new.picture.label(class="control-label") }}
@@ -26,6 +29,10 @@
         <div class="form-group">
             {{ new.profession.label(class="control-label") }}
             {{ new.profession(class="form-control", maxlength=50) }}
+        </div>
+        <div class="form-group">
+            {{ new.email.label(class="control-label") }}
+            {{ new.email(class="form-control", maxlength=50) }}
         </div>
         {{ new.submit(class="btn btn-default") }}
     </form>
