@@ -3,6 +3,7 @@ from flask import render_template, request, redirect, url_for, Blueprint, g, ses
 from flask_login import current_user, login_user, login_required
 from my_app.auth.models import Users
 from werkzeug.utils import secure_filename
+from sqlalchemy.exc import IntegrityError
 from my_app import login_manager
 from my_app import auth, db
 from my_app.settings.models import NewUserForm, UpdateProfile
@@ -44,8 +45,26 @@ def admin_panel(admin_tab='users'):
 def new_user():
     if session['usr_type'] == 'Admin':
         form = NewUserForm(request.form)
-        flash('Successfully added', 'success')
-        return redirect(url_for('settings.admin_panel'))
+        if form.validate_on_submit():
+            try:
+                new_user = Users(usr_name=form.usr_name.data, passwd=form.password.data, email='myemail@example.com',
+                                 usr_type=form.usr_type.data, storage_size=form.disk_quota.data*1024*1024*1024, used_storage_size='0',
+                                 bio='My bio', profile_pic='static/sections/user_icon.jpg', profession='My profession')
+                db.session.add(new_user)
+                db.session.commit()
+                print (os.getcwd())
+                os.mkdir(os.path.join('my_app','static', 'Users', form.usr_name.data))
+                flash('Successfully added', 'success')
+                return redirect(url_for('settings.admin_panel'))
+            except TimeoutError:
+                flash('Error please try later', 'error')
+            except IntegrityError:
+                flash('User already exists', 'error')
+            except (IOError, OSError):
+                db.session.delete(new_user)
+                db.session.commit()
+                flash('Error please try later', 'error')
+
     return redirect(url_for('settings.main_panel'))
 
 @settings.route('/change_profile')
