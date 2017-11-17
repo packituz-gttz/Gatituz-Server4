@@ -6,12 +6,40 @@
             Settings</a>
     </li>
 {% endblock %}
+{% block barbooks %}
+    {% if admin %}
+        {{ super() }}
+    {% else %}
 
+    {% endif %}
+{% endblock %}
+{% block barmedia %}
+    {% if admin %}
+        {{ super() }}
+    {% else %}
+
+    {% endif %}
+{% endblock %}
+{% block barusers %}
+    {% if admin %}
+        {{ super() }}
+    {% else %}
+
+    {% endif %}
+{% endblock %}
+{% block barcourses %}
+    {% if admin %}
+        {{ super() }}
+    {% else %}
+
+    {% endif %}
+{% endblock %}
 {% block barprofile %}
     <li class="nav-item">
         <a class="active nav-link" href="{{ url_for('settings.change_profile') }}">My Profile</a>
     </li>
 {% endblock %}
+
 {% block messagesview %}
     {{ super() }}
 {% endblock %}
@@ -33,6 +61,7 @@
         <div class="form-group">
             {{ new.email.label(class="control-label") }}
             {{ new.email(class="form-control", maxlength=50) }}
+            <p>{{ new.description.label }}</p>
         </div>
         {{ new.submit(class="btn btn-default") }}
     </form>

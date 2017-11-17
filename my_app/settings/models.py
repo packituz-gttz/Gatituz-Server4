@@ -23,3 +23,8 @@ class UpdateProfile(FlaskForm):
     profession = StringField("Your Profession", validators=[Optional(), Length(max=50)])
     email = StringField("Email", validators=[Optional(), Email()])
     submit = SubmitField("OK")
+
+class CoursesEdit(FlaskForm):
+    picture = FileField("Course Cover:", validators=[FileRequired()])
+    name = StringField("Course Name:", validators=[InputRequired(), Length(max=100)])
+    submit = SubmitField("Add")

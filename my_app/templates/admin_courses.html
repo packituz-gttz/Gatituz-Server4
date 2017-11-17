@@ -1,0 +1,30 @@
+{% extends 'base_admin_settings.html' %}
+
+{% block item_settings %}
+    <li class="nav-item active">
+        <a class="nav-link" href="{{ url_for('settings.main_panel') }}"><i class="fa d-inline fa-lg fa-cog"></i>
+            Settings</a>
+    </li>
+{% endblock %}
+
+{% block barcourses %}
+    <li class="nav-item">
+        <a class="nav-link active" href="{{ url_for('settings.courses') }}">Courses
+        </a>
+    </li>
+{% endblock %}
+
+{% block newelement %}
+    <form action="{{ url_for('settings.validate_change_profile') }}" method="post" enctype="multipart/form-data">
+        {{ new.csrf_token }}
+        <div class="form-group">
+            {{ new.picture.label(class="control-label") }}
+            {{ new.picture(class="btn") }}
+        </div>
+        <div class="form-group">
+            {{ new.name.label(class="control-label") }}
+            {{ new.name(class="form-control", maxlength=50) }}
+        </div>
+        {{ new.submit(class="btn btn-default") }}
+    </form>
+{% endblock %}

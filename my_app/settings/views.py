@@ -6,12 +6,16 @@ from werkzeug.utils import secure_filename
 from sqlalchemy.exc import IntegrityError
 from my_app import login_manager
 from my_app import auth, db
-from my_app.settings.models import NewUserForm, UpdateProfile
+from my_app.settings.models import NewUserForm, UpdateProfile, CoursesEdit
 import os
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 
 settings = Blueprint('settings', __name__)
+
+# TODO limit upload size
+# TODO add option for deleting users and modifying them
+# TODO implement Courses settings
 
 @auth.before_request
 def get_current_user():
@@ -20,9 +24,11 @@ def get_current_user():
 @settings.route('/main_panel')
 @login_required
 def main_panel():
-    if 'usr_type' in session:
-        if session['usr_type'] == 'Admin':
-            return redirect(url_for('settings.admin_panel'))
+    if session['usr_type'] == 'Admin':
+        return redirect(url_for('settings.admin_panel'))
+    else:
+        return redirect(url_for('settings.change_profile'))
+
 
 @settings.route('/admin_panel')
 @settings.route('/admin_panel/admin_tab')
@@ -39,7 +45,6 @@ def admin_panel(admin_tab='users'):
     else:
         return redirect('settings.main_panel')
 
-# TODO add user to db
 @settings.route('/new_user', methods=['GET', 'POST'])
 @login_required
 def new_user():
@@ -79,8 +84,13 @@ def change_profile():
         form.profession.data = user.profession
         form.email.data = user.email
     except TimeoutError:
-        pass
-    return render_template('user_profile.html', new=form)
+        flash('Error couldn\'t load data')
+    if session['usr_type'] == 'Admin':
+        print ("admin")
+        return render_template('user_profile.html', new=form, admin=True)
+    else:
+        print ("noadmin")
+        return render_template('user_profile.html', new=form, admin=False)
 
 @settings.route('/validate_change_profile', methods=['GET', 'POST'])
 @login_required
@@ -116,3 +126,12 @@ def validate_change_profile():
         except (TimeoutError) as err:
             flash('Error, please try later', 'error')
     return redirect(url_for('settings.change_profile'))
+
+@settings.route('/courses')
+@login_required
+def courses():
+    if session['usr_type'] == 'Admin':
+        form = CoursesEdit()
+        return render_template('admin_courses.html', new=form)
+    else:
+        return redirect(url_for('settings.main_panel'))
