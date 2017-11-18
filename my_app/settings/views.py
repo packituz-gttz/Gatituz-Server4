@@ -142,6 +142,15 @@ def books():
     if session['usr_type'] == 'Admin':
         form = NewSeries()
         return render_template('admin_books.html', new=form)
+    return redirect(url_for('auth.index'))
+
+@settings.route('/media')
+@login_required
+def media():
+    if session['usr_type'] == 'Admin':
+        form = NewSeries()
+        return render_template('admin_media.html', new=form)
+    return redirect(url_for('auth.index'))
 
 @settings.route('/validate_new_series/<series_type>', methods=['GET', 'POST'])
 @login_required
@@ -156,7 +165,11 @@ def validate_new_series(series_type):
                 print (new_series.dir_path)
                 os.mkdir(new_series.dir_path)
             elif series_type == 'Media':
-                pass
+                new_series = SeriesMedia(form.title.data, form.description.data)
+                db.session.add(new_series)
+                db.session.commit()
+                print(new_series.dir_path)
+                os.mkdir(new_series.dir_path)
             else:
                 return url_for('settings.books')
             flash('Successfully added', 'success')
@@ -168,4 +181,4 @@ def validate_new_series(series_type):
             db.session.delete(new_series)
             db.session.commit()
             flash('Error, couldn\'t add series', 'error')
-        return redirect(url_for('settings.books'))
+        return redirect(url_for('settings.' + series_type.lower()))
