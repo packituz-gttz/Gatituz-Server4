@@ -6,7 +6,7 @@ from werkzeug.utils import secure_filename
 from sqlalchemy.exc import IntegrityError
 from my_app import login_manager
 from my_app import auth, db
-from my_app.settings.models import NewUserForm, UpdateProfile, CoursesEdit
+from my_app.settings.models import NewUserForm, UpdateProfile, CoursesEdit, NewSeries, SeriesBooks, SeriesMedia
 import os
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
@@ -135,3 +135,37 @@ def courses():
         return render_template('admin_courses.html', new=form)
     else:
         return redirect(url_for('settings.main_panel'))
+
+@settings.route('/books')
+@login_required
+def books():
+    if session['usr_type'] == 'Admin':
+        form = NewSeries()
+        return render_template('admin_books.html', new=form)
+
+@settings.route('/validate_new_series/<series_type>', methods=['GET', 'POST'])
+@login_required
+def validate_new_series(series_type):
+    if session['usr_type'] == 'Admin':
+        form = NewSeries(request.form)
+        try:
+            if series_type == 'Books':
+                new_series = SeriesBooks(form.title.data, form.description.data)
+                db.session.add(new_series)
+                db.session.commit()
+                print (new_series.dir_path)
+                os.mkdir(new_series.dir_path)
+            elif series_type == 'Media':
+                pass
+            else:
+                return url_for('settings.books')
+            flash('Successfully added', 'success')
+        except IntegrityError:
+            flash('Series already exists', 'error')
+        except TimeoutError:
+            flash('Error please try later', 'success')
+        except (IOError, OSError):
+            db.session.delete(new_series)
+            db.session.commit()
+            flash('Error, couldn\'t add series', 'error')
+        return redirect(url_for('settings.books'))

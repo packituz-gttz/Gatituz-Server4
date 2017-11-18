@@ -8,6 +8,7 @@ from my_app import db
 from my_app import bcrypt
 import datetime
 from sqlalchemy import Sequence
+import os
 
 class NewUserForm(FlaskForm):
     usr_name = StringField('', validators=[InputRequired()])
@@ -24,7 +25,37 @@ class UpdateProfile(FlaskForm):
     email = StringField("Email", validators=[Optional(), Email()])
     submit = SubmitField("OK")
 
+
 class CoursesEdit(FlaskForm):
     picture = FileField("Course Cover:", validators=[FileRequired()])
     name = StringField("Course Name:", validators=[InputRequired(), Length(max=100)])
     submit = SubmitField("Add")
+
+
+class NewSeries(FlaskForm):
+    title = StringField("Serie Title:", validators=[InputRequired(), Length(max=200)])
+    description = TextAreaField("Description", validators=[InputRequired(), Length(max=100)])
+    submit = SubmitField("Add")
+
+
+class SeriesBooks(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.String(200))
+    description = db.Column(db.TEXT)
+    dir_path = db.Column(db.String(500), unique=True)
+
+    def __init__(self, title, description):
+        self.title = title
+        self.description = description
+        self.dir_path = os.path.join('my_app', 'static', 'sections', 'Books', title )
+
+class SeriesMedia(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.String(500))
+    description = db.Column(db.TEXT)
+    dir_path = db.Column(db.String(150), unique=True)
+
+    def __init__(self, title, description):
+        self.title = title
+        self.description = description
+        self.dir_path = os.path.join('my_app', 'static', 'sections', 'Media', title )
